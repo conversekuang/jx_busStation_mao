@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>地点关键字 + 公交路线规划</title>
+    <title>公交路线查询</title>
     <style type="text/css">
     html,
     body,
@@ -74,11 +74,9 @@
     }
 
     function lineSearch() {
-
         var start = document.getElementById("startstation").value;
         var end = document.getElementById("endstation").value;
-        //alert(start)
-
+        
         var transOptions = {
             map: map,
             city: '嘉兴市',
@@ -88,24 +86,28 @@
         //构造公交换乘类
         var transfer = new AMap.Transfer(transOptions);
         //根据起、终点名称查询公交换乘路线
+        if (start == "" || end == "")
+            alert("您输入的信息不完整，请重新输入!")
+        else {
 
-        transfer.search([
-            { keyword: start, city: '嘉兴' },
-            //第一个元素city缺省时取transOptions的city属性
-            { keyword: end, city: '嘉兴' }
-            //第二个元素city缺省时取transOptions的cityd属性
-        ], function(status, result) {
-            // result即是对应的公交路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_TransferResult
-            map.clearMap() //清除多次数据叠加
-            if (status === 'complete') {
-                log.success('公交路线查询完成')
-            } else {
-                log.error('公交路线数据查询失败' + result)
-            }
-        });
+
+            transfer.search([
+                { keyword: start, city: '嘉兴' },
+                //第一个元素city缺省时取transOptions的city属性
+                { keyword: end, city: '嘉兴' }
+                //第二个元素city缺省时取transOptions的cityd属性
+            ], function(status, result) {
+                // result即是对应的公交路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_TransferResult
+                map.clearMap() //清除多次数据叠加
+                if (status === 'complete') {
+                    log.success('公交路线查询完成')
+                } else {
+                    log.error('公交路线数据查询失败' + result)
+                }
+            });
+        }
     }
-    lineSearch();
-    clearPanel(); 
+    //lineSearch();
 
     document.getElementById('search').addEventListener("click", lineSearch);
     document.getElementById('search').addEventListener("click", clearPanel)
